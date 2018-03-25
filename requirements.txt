@@ -3,7 +3,6 @@ chardet==3.0.4
 docopt==0.6.2
 idna==2.6
 img2txt.py==2.3
-MapsInTerminal==0.1
 pager==3.3
 Pillow==5.0.0
 requests==2.18.4
