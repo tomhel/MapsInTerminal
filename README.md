@@ -5,6 +5,8 @@ MapsInTerminal is a simple command line utility to view maps in the terminal usi
 
 Supports WMS version 1.1.1 and 1.3.0. Might work with other versions, but that is untested.
 
+Tested on GNU/Linux, but might work on other Operating Systems aswell.
+
 ## License
 Mozilla Public License, v. 2.0
 
