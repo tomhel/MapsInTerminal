@@ -12,6 +12,8 @@ import pager
 from contextlib import contextmanager
 import argparse
 import io
+import os
+import json
 from PIL import Image
 import ansi
 
@@ -193,7 +195,8 @@ def start_client(service):
 
 
 def create_parser():
-    description = "A WMS client for the terminal"
+    default_conf = load_config()
+    description = "MapsInTerminal: A WMS client for the terminal"
     epilog = "PAN: arrow keys, ZOOM: +/-, RESET: backspace, EXIT: escape"
     parser = argparse.ArgumentParser(description=description, epilog=epilog)
     parser.add_argument("url",
@@ -201,29 +204,52 @@ def create_parser():
     parser.add_argument("layer",
                         help="WMS layer")
 
-    parser.add_argument("-c", "--crs", dest="crs", default="EPSG:3006",
-                        help="CRS. Default: EPSG:3006")
-    parser.add_argument("-f", "--format", dest="format", default="image/png",
-                        help="WMS image format. Default: image/png")
-    parser.add_argument("-s", "--style", dest="style", default=None,
-                        help="WMS layer style")
-    parser.add_argument("-v", "--version", dest="version", default="1.1.1",
-                        help="WMS version. Default: 1.1.1")
+    parser.add_argument("-c", "--crs", dest="crs", default=default_conf["crs"],
+                        help="CRS. Default: %s" % default_conf["crs"])
+    parser.add_argument("-f", "--format", dest="format", default=default_conf["format"],
+                        help="WMS image format. Default: %s" % default_conf["format"])
+    parser.add_argument("-s", "--style", dest="style", default=default_conf["style"],
+                        help="WMS layer style. Default: %s" % default_conf["style"])
+    parser.add_argument("-v", "--version", dest="version", default=default_conf["version"],
+                        help="WMS version. Default: %s" % default_conf["version"])
 
-    parser.add_argument("-C", "--center", dest="center", default="593000,6902000",
-                        help="Center coordinate, easting,northing. Default: 593000,6902000")
-    parser.add_argument("-R", "--res", type=float, dest="res", default=2048,
-                        help="resolution, units/pixel. Default: 2048")
-    parser.add_argument("-G", "--gutter", type=int, dest="gutter", default=0,
-                        help="Image gutter in pixels. Default: 0")
-    parser.add_argument("-S", "--scaling", type=float, dest="scaling", default=1,
-                        help="Image scale factor. Default: 1.0")
-    parser.add_argument("-A", "--auth", dest="auth", default=None,
-                        help="Authentication, user:password")
-    parser.add_argument("-I", "--invert", action="store_true", dest="invert", default=False,
-                        help="Invert axis order")
-
+    parser.add_argument("-C", "--center", dest="center", default=default_conf["center"],
+                        help="Center coordinate, easting,northing. Default: %s" % default_conf["center"])
+    parser.add_argument("-R", "--res", type=float, dest="res", default=default_conf["res"],
+                        help="resolution, units/pixel. Default: %f" % default_conf["res"])
+    parser.add_argument("-G", "--gutter", type=int, dest="gutter", default=default_conf["gutter"],
+                        help="Image gutter in pixels. Default: %d" % default_conf["gutter"])
+    parser.add_argument("-S", "--scaling", type=float, dest="scaling", default=default_conf["scaling"],
+                        help="Image scale factor. Default: %f" % default_conf["scaling"])
+    parser.add_argument("-A", "--auth", dest="auth", default=default_conf["auth"],
+                        help="Authentication, user:password. Default %s" %
+                             (None if default_conf["auth"] is None else default_conf["auth"].split(":")[0] + ":*****"))
+    parser.add_argument("-I", "--invert", action="store_false" if default_conf["invert"] is True else "store_true",
+                        dest="invert", default=default_conf["invert"],
+                        help="Invert axis order. Default %s" % default_conf["invert"])
     return parser
+
+
+def load_config():
+    conf_file = os.path.join(os.path.expanduser("~"), ".MapsInTerminal")
+    conf = {
+        "crs": "EPSG:3006",
+        "format": "image/png",
+        "style": None,
+        "version": "1.1.1",
+        "center": "593000,6902000",
+        "res": 2048,
+        "gutter": 0,
+        "scaling": 1,
+        "auth": None,
+        "invert": False
+    }
+
+    if os.path.isfile(conf_file):
+        with open(conf_file) as f:
+            conf.update(json.load(f))
+
+    return conf
 
 
 def main():
@@ -241,4 +267,3 @@ def main():
 
 if __name__ == "__main__":
     sys.exit(main())
-

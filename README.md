@@ -33,6 +33,22 @@ Exit: escape<br/>
 
 To see all options run: ``` mapsint --help ```
 
+It is possible to set default values for options by creating a file named ``` .MapsInTerminal ``` in the user's home directory:
+```json
+{
+   "crs": "EPSG:3006",
+   "format": "image/png",
+   "style": null,
+   "version": "1.1.1",
+   "center": "593000,6902000",
+   "res": 2048,
+   "gutter": 0,
+   "scaling": 1,
+   "auth": null,
+   "invert": false
+}
+```
+
 ## Dependencies
 
 * python 2.7
