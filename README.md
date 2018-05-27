@@ -60,5 +60,5 @@ It is possible to set default values for options by creating a file named ``` .M
 ## Installation
 ```
 cd MapsInTerminal
-pip install -r requirements.txt .
+pip install .
 ```
