@@ -5,6 +5,5 @@ idna==2.6
 img2txt.py==2.3
 pager==3.3
 Pillow==5.0.0
-requests==2.18.4
-urllib3==1.22
-
+requests==2.20.0
+urllib3==1.23
