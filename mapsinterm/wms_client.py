@@ -16,16 +16,20 @@ import os
 import json
 from PIL import Image
 import ansi
+import urllib3
 
 
 class WMSService(object):
-    def __init__(self, url, layer, frmt, style, srs, version, center,
-                 res, gutter, scaling, auth, invert_axis):
+    def __init__(self, url, layer, frmt, styles, srs, version, center,
+                 res, gutter, scaling, auth, invert_axis, ssl_verify):
+
+        if not ssl_verify:
+            urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
         self.url = url
         self.layer = layer
         self.format = frmt
         self.srs = srs
-        self.style = style
+        self.styles = styles
         self.version = version
         self.gutter = gutter
         self.scaling = scaling
@@ -37,6 +41,7 @@ class WMSService(object):
         self.session.auth = auth
         self.last_error = None
         self.invert_axis = invert_axis
+        self.ssl_verify = ssl_verify
         self.pan_factor = 0.15
 
     def pan_left(self):
@@ -80,7 +85,8 @@ class WMSService(object):
             "format": self.format,
             "request": "GetMap",
             "version": ".".join(str(x) for x in self.version),
-            "service": "WMS"
+            "service": "WMS",
+            "styles": ""
         }
 
         if self.version >= (1, 3, 0):
@@ -88,10 +94,10 @@ class WMSService(object):
         else:
             params["srs"] = self.srs
 
-        if self.style:
-            params["style"] = self.style
+        if self.styles:
+            params["styles"] = self.styles
 
-        r = self.session.get(self.url, params=params)
+        r = self.session.get(self.url, params=params, verify=self.ssl_verify)
 
         self.last_error = None
 
@@ -208,8 +214,8 @@ def create_parser():
                         help="CRS. Default: %s" % default_conf["crs"])
     parser.add_argument("-f", "--format", dest="format", default=default_conf["format"],
                         help="WMS image format. Default: %s" % default_conf["format"])
-    parser.add_argument("-s", "--style", dest="style", default=default_conf["style"],
-                        help="WMS layer style. Default: %s" % default_conf["style"])
+    parser.add_argument("-s", "--styles", dest="styles", default=default_conf["styles"],
+                        help="WMS layer styles. Default: %s" % default_conf["styles"])
     parser.add_argument("-v", "--version", dest="version", default=default_conf["version"],
                         help="WMS version. Default: %s" % default_conf["version"])
 
@@ -227,22 +233,27 @@ def create_parser():
     parser.add_argument("-I", "--invert", action="store_false" if default_conf["invert"] is True else "store_true",
                         dest="invert", default=default_conf["invert"],
                         help="Invert axis order. Default %s" % default_conf["invert"])
+    parser.add_argument("-n", "--no-ssl-verify", action="store_false",
+                        dest="ssl_verify", default=default_conf["ssl_verify"],
+                        help="Disable SSL certificate verification. Default %s"
+                             % "enabled" if default_conf["ssl_verify"] is True else "disabled")
     return parser
 
 
 def load_config():
     conf_file = os.path.join(os.path.expanduser("~"), ".MapsInTerminal")
     conf = {
-        "crs": "EPSG:3006",
+        "crs": "EPSG:3857",
         "format": "image/png",
-        "style": None,
+        "styles": None,
         "version": "1.1.1",
-        "center": "593000,6902000",
+        "center": "2011618,8251379",
         "res": 2048,
         "gutter": 0,
         "scaling": 1,
         "auth": None,
-        "invert": False
+        "invert": False,
+        "ssl_verify": True
     }
 
     if os.path.isfile(conf_file):
@@ -260,8 +271,8 @@ def main():
     version = tuple(int(x) for x in args.version.split("."))
 
     with setup_terminal():
-        service = WMSService(args.url, args.layer, args.format, args.style, args.crs, version,
-                             center, args.res, args.gutter, args.scaling, auth, args.invert)
+        service = WMSService(args.url, args.layer, args.format, args.styles, args.crs, version,
+                             center, args.res, args.gutter, args.scaling, auth, args.invert, args.ssl_verify)
         start_client(service)
 
 

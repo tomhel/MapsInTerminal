@@ -9,7 +9,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="MapsInTerminal",
-    version="0.1",
+    version="0.2",
     description="A WMS client for the terminal",
     author="Tommy Hellstrom",
     packages=find_packages(),
