@@ -14,7 +14,7 @@ Mozilla Public License, v. 2.0
 
 ### Web Mercator projection
 
-This is the default projection.
+This is the default projection, _EPSG:3857_.
 
 ```
 mapsint http://some-wms-service/my/wms mylayer
@@ -22,7 +22,7 @@ mapsint http://some-wms-service/my/wms mylayer
 
 ### Official projection of Sweden
 
-Use a custom projection.
+Use a custom projection, for example _EPSG:3006_.
 
 ```
 mapsint http://some-wms-service/my/wms mylayer --crs epsg:3006 --center 593000,6902000
