@@ -33,7 +33,7 @@ mapsint http://some-wms-service/my/wms mylayer --crs epsg:3006 --center 593000,6
 Can be used with OpenStreetMap WMS provided by [terrestris](https://www.terrestris.de/en/openstreetmap-wms/)
 
 ```
-mapsint https://ows.terrestris.de/osm/service OSM-WMS --no-ssl-verify
+mapsint https://ows.terrestris.de/osm/service OSM-WMS
 ```
 
 [![wms_osm](wms_osm_mini.png?raw=true)](wms_osm.png?raw=true)
@@ -49,14 +49,14 @@ Exit: escape<br/>
 
 ### More advanced options includes:
 * WMS version
-* WMS format
+* WMS image format
 * WMS styles
-* image gutter
-* image scaling
-* authentication
-* axis order
-* resolution (units/pixel)
-* SSL certificate verification
+* Image gutter
+* Image scaling
+* Basic Auth authentication
+* Axis order
+* Resolution (units/pixel)
+* Disable SSL certificate verification
 
 To see all options run: ``` mapsint --help ```
 
