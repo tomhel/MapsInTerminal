@@ -23,6 +23,9 @@ setup(
         "console_scripts": [
             "mapsint=mapsinterm.wms_client:main"
         ]
-    }
+    },
+    classifiers=[
+        "Python :: 3"
+    ],
+    python_requires='>=3'
 )
-
