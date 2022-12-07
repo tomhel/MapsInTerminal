@@ -53,7 +53,7 @@ Exit: escape<br/>
 * WMS styles
 * WMS version
 * Center coordinate, view positioning `x,y`
-* Resolution (units/pixel)
+* Resolution (units/pixel), zoom level at startup
 * Image gutter
 * Image scaling
 * Basic Auth `user:pass`
