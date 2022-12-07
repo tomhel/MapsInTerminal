@@ -47,7 +47,7 @@ Zoom: +/-<br/>
 Reset view: backspace<br/>
 Exit: escape<br/>
 
-### Configuration options:
+### Configuration options
 * WMS CRS
 * WMS image format
 * WMS styles
