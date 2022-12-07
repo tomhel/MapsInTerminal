@@ -4,7 +4,7 @@ docopt==0.6.2
 idna==3.4
 img2txt.py==2.4
 pager==3.3
-Pillow==8.4.0
+Pillow==9.3.0
 pkg-resources==0.0.0
 requests==2.27.1
 urllib3==1.26.13
